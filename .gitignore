@@ -61,4 +61,4 @@ typings/
 .idea/
 
 # Build output
-#lib
+lib
