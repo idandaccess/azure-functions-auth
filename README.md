@@ -10,7 +10,11 @@ const validateJwt = require('azure-functions-auth')({
   domain: '<your IDP>',
   algorithms: ['RS256'],
 });
+```
 
+## Usage
+### Callback Style
+```js
 module.exports = validateJwt(function(context, req) {
   if (req.user) {
     context.res = {
@@ -26,8 +30,45 @@ module.exports = validateJwt(function(context, req) {
   context.done();
 });
 ```
+In case of an invalid JWT `context.res` gets populated accordingly and `context.done()` gets called.
 
-## Usage
+### Async Style
+```js
+const main = (context, req) => {
+  context.log('token is valid. (you shouldn\'t log like that in production code)')
+  
+  return new Promise(resolve => {
+    resolve('the function will return this exact string as body with a status code of 200')
+  }).then(asyncResult =>{
+    return asyncResult
+  })
+}
+module.exports = validateJwt(main, true)
+```
+In case of an invalid JWT a specific error and status code get returned. Make sure to have your function host is configured to use function's return value.
+
+```json
+{
+  "bindings": [
+    {
+      "type": "http",
+      "direction": "out",
+      "name": "$return"
+    }
+  ]
+}
+```
+Regarding the http output your `function.json` should look like the above.
+
+```js
+module.exports = {
+  run: validateJwt(main, true),
+  main
+}
+```
+In order to do tests, of course you still can export your functions.
+
+### Calling your function
 
 Now when you make a call to the Http endpoint you'll need to add an Authorization header, e.g.:
 
