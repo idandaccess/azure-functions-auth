@@ -1,6 +1,6 @@
 {
   "name": "azure-functions-auth",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Authentication and Authorization for Azure Functions (with OAuth 2.0 and JWT)",
   "main": "lib/index.js",
   "dependencies": {
@@ -22,7 +22,7 @@
   },
   "scripts": {
     "clean": "rimraf lib/",
-    "compile": "babel -d lib/ src/",
+    "compile": "babel -d lib/ src/ && cp src/index.d.ts lib/",
     "prepublish": "npm run clean && npm run compile",
     "release": "git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish",
     "test-watch": "NODE_ENV=test mocha --compilers js:babel-core/register --timeout 5000 $(find ./tests -name *.tests.js) --watch"
