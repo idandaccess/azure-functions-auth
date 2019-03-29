@@ -9,7 +9,7 @@ declare namespace createValidateJwt {
     clientId: string;
     clientSecret: string;
     domain: string;
-    algorithms: string;
+    algorithms: string[];
     audience?: string;
   }
 }
