@@ -1,6 +1,6 @@
 {
   "name": "azure-functions-auth",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Authentication and Authorization for Azure Functions (with OAuth 2.0 and JWT)",
   "main": "lib/index.js",
   "dependencies": {
