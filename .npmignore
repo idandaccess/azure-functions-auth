@@ -2,3 +2,7 @@
 .eslintrc
 src/
 .idea
+.vscode
+test/
+jest.config.js
+renovate.json
