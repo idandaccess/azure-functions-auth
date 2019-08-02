@@ -62,3 +62,15 @@ typings/
 
 # Build output
 lib
+
+# RESTClient-extension.requests
+RESTClient-extension.requests
+
+# ARM Template Parameter file
+test/infrastructure/parameters.json
+
+# ARM template parameters
+tests/infrastructure/parameters.json
+
+# Misc
+.DS_Store

@@ -1,0 +1,29 @@
+{
+  "name": "azure-functions-typescript-vscode-template",
+  "version": "1.0.0",
+  "description": "A project starting point for Azure Functions, Typescript and Visual Studio Code (vscode) that's making use of and is based on the latest functionality of \"azure-functions-core-tools\" command line tools for Azure Functions.",
+  "keywords": [],
+  "author": "Andreas Grimm",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andreasgrimm/azure-functions-typescript-vscode-template.git"
+  },
+  "bugs": {
+    "url": "https://github.com/andreasgrimm/azure-functions-typescript-vscode-template/issues"
+  },
+  "homepage": "https://github.com/andreasgrimm/azure-functions-typescript-vscode-template#readme",
+  "engines": {
+    "node": "10.14.1"
+  },
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "azure-functions-core-tools": "^2.7.1480"
+  },
+  "dependencies": {
+    "express-jwt": "^5.3.1"
+  }
+}

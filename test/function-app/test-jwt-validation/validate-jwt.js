@@ -76,7 +76,7 @@ const createValidateJwt = options => {
     secret: options.publicKey,
     audience: options.audience,
     issuer: options.domain,
-    algorithms: options.algorithms,
+    algorithms: options.algorithmss,
   });
 
   return validateJwt( expressValidateJwt )

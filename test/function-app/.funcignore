@@ -1,0 +1,8 @@
+*.js.map
+*.ts
+.git*
+.vscode
+.nvmrc
+local.settings.json
+tsconfig.json
+deploy.sh

@@ -1,0 +1,20 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Attach to Functions (global tools)",
+      "type": "node",
+      "request": "attach",
+      "port": 9229,
+      "preLaunchTask": "func: host start"
+    },
+    {
+      "name": "Attach to Functions (local tools)",
+      "type": "node",
+      "request": "attach",
+      "port": 9230,
+      "preLaunchTask": "func start"
+    }
+
+  ]
+}

@@ -1,0 +1,39 @@
+#### !!! DON'T CHANGE VALUES HERE !!!
+#### !!! DON'T COMMIT ANY INSERTED VALUES !!!
+#### instead copy this file to "RESTClient-extension.requests", which gets git-ignored!
+####
+#### use this with vs code extension "REST Client" (humao.rest-client)
+####
+
+#### Get the IDP's / Issuer's public key (sometimes called 'signing certificate') ###
+###
+https://idandaccess.eu.auth0.com/pem
+
+
+#### Cloud test with an expired access token
+#### .. from issuer "https://idandaccess.eu.auth0.com/"
+#### .. for API "api://tests.repo.azure-functions-auth.idandaccess.com"
+###
+https://tests-repo-azure-functions-auth-idandaccess.azurewebsites.net/test-jwt-validation
+x-functions-key: <_insert_functions-key_>
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1UWTNOVGt5TWtORFF6aEJRVUZHT0VGRE16VXpRa014TnpsRk5EVXhNVGhFUWtVeE9FWXlSZyJ9.eyJpc3MiOiJodHRwczovL2lkYW5kYWNjZXNzLmV1LmF1dGgwLmNvbS8iLCJzdWIiOiJoRjNTN25oU252MUJMSU1ISm15UFpvcW5kZzRPemZsUUBjbGllbnRzIiwiYXVkIjoiYXBpOi8vdGVzdHMucmVwby5henVyZS1mdW5jdGlvbnMtYXV0aC5pZGFuZGFjY2Vzcy5jb20iLCJpYXQiOjE1NjQ2NjA0OTEsImV4cCI6MTU2NDc0Njg5MSwiYXpwIjoiaEYzUzduaFNudjFCTElNSEpteVBab3FuZGc0T3pmbFEiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMifQ.mXMDoOtXa2pFcE4V1Rskmm6VH0NQyRkMMClFISt0NvLn32e1Z_K92v2-D4rzj4ClvOaOxuir-HTiRrKRJ1AJAtX2v5D7m7hTYxQKVxy77LmGtFXXDeLppDk6FLbGfEHxy4UfYG9wTyHb_c50stMO1jFniNZBANhc0aMo5IwViFhaCUdReTYFkpgoHD0QB2MWqwGpuIyy8nbPLpj9SIi4vdckec30aiUbbJXEJjzduoVSxIbjRM51R8BVgU4r2oXqom9j4oYh60VF7KTP5BZTryGWbazOQ6KBqqXvROsgOmmKDC4nA9gOK2lEL8S0qmglsisMwfdrH2esFglg_2petw
+
+
+#### Cloud test with a fresh access token
+###
+https://tests-repo-azure-functions-auth-idandaccess.azurewebsites.net/test-jwt-validation
+x-functions-key: <_insert_functions-key_>
+Authorization: Bearer <_insert_newly_generated_access_token_>
+
+
+#### Local test with an expired access token
+#### .. from issuer "https://idandaccess.eu.auth0.com/"
+#### .. for API "api://tests.repo.azure-functions-auth.idandaccess.com"
+###
+http://localhost:7071/test-jwt-validation
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1UWTNOVGt5TWtORFF6aEJRVUZHT0VGRE16VXpRa014TnpsRk5EVXhNVGhFUWtVeE9FWXlSZyJ9.eyJpc3MiOiJodHRwczovL2lkYW5kYWNjZXNzLmV1LmF1dGgwLmNvbS8iLCJzdWIiOiJoRjNTN25oU252MUJMSU1ISm15UFpvcW5kZzRPemZsUUBjbGllbnRzIiwiYXVkIjoiYXBpOi8vdGVzdHMucmVwby5henVyZS1mdW5jdGlvbnMtYXV0aC5pZGFuZGFjY2Vzcy5jb20iLCJpYXQiOjE1NjQ2NjA0OTEsImV4cCI6MTU2NDc0Njg5MSwiYXpwIjoiaEYzUzduaFNudjFCTElNSEpteVBab3FuZGc0T3pmbFEiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMifQ.mXMDoOtXa2pFcE4V1Rskmm6VH0NQyRkMMClFISt0NvLn32e1Z_K92v2-D4rzj4ClvOaOxuir-HTiRrKRJ1AJAtX2v5D7m7hTYxQKVxy77LmGtFXXDeLppDk6FLbGfEHxy4UfYG9wTyHb_c50stMO1jFniNZBANhc0aMo5IwViFhaCUdReTYFkpgoHD0QB2MWqwGpuIyy8nbPLpj9SIi4vdckec30aiUbbJXEJjzduoVSxIbjRM51R8BVgU4r2oXqom9j4oYh60VF7KTP5BZTryGWbazOQ6KBqqXvROsgOmmKDC4nA9gOK2lEL8S0qmglsisMwfdrH2esFglg_2petw
+
+#### Local test with a fresh access token
+###
+http://localhost:7071/test-jwt-validation
+Authorization: Bearer <_insert_newly_generated_access_token_>
