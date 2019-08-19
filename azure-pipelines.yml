@@ -3,27 +3,6 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
-strategy:
-  matrix:
-    linux-node-10:
-      imageName: 'ubuntu-latest'
-      nodeVersion: '10.x'
-    linux-node-latest:
-      imageName: 'ubuntu-latest'
-      nodeVersion: '>=12.x'
-    mac-node-10:
-      imageName: 'macos-latest'
-      nodeVersion: '10.x'
-    mac-node-latest:
-      imageName: 'macos-latest'
-      nodeVersion: '>=12.x'
-    windows-node-10:
-      imageName: 'windows-latest'
-      nodeVersion: '10.x'
-    windows-node-latest:
-      imageName: 'windows-latest'
-      nodeVersion: '>=12.x'
-
 trigger:
   batch: false
   branches:
@@ -35,16 +14,87 @@ trigger:
     exclude:
     - README.md
 
-pool:
-  vmImage: $(imageName)
 
-steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: $(nodeVersion)
-  displayName: 'Install Node.js'
+jobs:
+- job: unit_tests
+  displayName: 'Unit Tests'
+  continueOnError: false
 
-- script: |
-    npm install
-    npm test
-  displayName: 'npm install and test'
+  strategy:
+    matrix:
+      linux-node-10:
+        imageName: 'ubuntu-latest'
+        nodeVersion: '10.x'
+      linux-node-latest:
+        imageName: 'ubuntu-latest'
+        nodeVersion: '>=12.x'
+      mac-node-10:
+        imageName: 'macos-latest'
+        nodeVersion: '10.x'
+      mac-node-latest:
+        imageName: 'macos-latest'
+        nodeVersion: '>=12.x'
+      windows-node-10:
+        imageName: 'windows-latest'
+        nodeVersion: '10.x'
+      windows-node-latest:
+        imageName: 'windows-latest'
+        nodeVersion: '>=12.x'
+
+  pool:
+    vmImage: $(imageName)
+
+  steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: $(nodeVersion)
+    displayName: 'Install Node.js'
+
+  - script: |
+      npm install
+      npm test
+    displayName: 'npm install and test'
+
+- job: build
+  displayName: 'Build'
+  dependsOn: unit_tests
+  condition: succeeded()
+  continueOnError: false
+
+  pool:
+    vmImage: 'ubuntu-latest'
+
+  steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '10.x'
+    displayName: 'Install Node.js'
+
+  - script: |
+      npm install
+      npm run compile
+    displayName: 'npm install and compile'
+
+- job: integration_tests
+  displayName: 'Integration Tests'
+  dependsOn: build
+  condition: succeeded()
+  continueOnError: false
+
+  pool:
+    vmImage: 'ubuntu-latest'
+
+  steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '10.x'
+    displayName: 'Install Node.js'
+
+  - script: |
+      npm install
+      npm run test-integrations
+    env:
+      AUTH_M2M_CLIENT_SECRET_AUTH0: $(AUTH_M2M_CLIENT_SECRET_AUTH0)
+      AUTH_FUNCTIONS_KEY: $(AUTH_FUNCTIONS_KEY)
+    displayName: 'npm run test-integrations'
+

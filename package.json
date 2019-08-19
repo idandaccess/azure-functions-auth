@@ -14,10 +14,12 @@
     "babel-preset-es2015": "6.24.1",
     "babel-preset-stage-2": "6.24.1",
     "chai": "4.2.0",
+    "dotenv": "^8.1.0",
     "eslint": "6.2.0",
     "eslint-plugin-babel": "5.3.0",
     "istanbul": "0.4.5",
     "jest": "24.9.0",
+    "request-promise": "^4.2.4",
     "rimraf": "3.0.0"
   },
   "scripts": {
@@ -26,7 +28,8 @@
     "prepublish": "npm run clean && npm run compile",
     "release": "git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish",
     "test-watch": "NODE_ENV=test mocha --compilers js:babel-core/register --timeout 5000 $(find ./tests -name *.tests.js) --watch",
-    "test": "jest"
+    "test": "jest ./src/",
+    "test-integrations": "jest ./test/integrations"
   },
   "repository": {
     "type": "git",
