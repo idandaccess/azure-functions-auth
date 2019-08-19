@@ -1,3 +1,5 @@
+[![Build Status](https://idandaccess.visualstudio.com/azure-functions-auth/_apis/build/status/idandaccess.azure-functions-auth?branchName=master)](https://idandaccess.visualstudio.com/azure-functions-auth/_build/latest?definitionId=2&branchName=master)
+
 # azure-functions-auth
 Authentication and Authorization for Azure Functions (with OAuth 2.0 and JWT)
 
