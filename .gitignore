@@ -69,8 +69,8 @@ RESTClient-extension.requests
 # ARM Template Parameter file
 test/infrastructure/parameters.json
 
-# ARM template parameters
-tests/infrastructure/parameters.json
+# Local environment variables
+.env
 
 # Misc
 .DS_Store
