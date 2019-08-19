@@ -3,6 +3,27 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
+strategy:
+  matrix:
+    linux-node-10:
+      imageName: 'ubuntu-latest'
+      nodeVersion: '10.x'
+    linux-node-latest:
+      imageName: 'ubuntu-latest'
+      nodeVersion: '>=12.x'
+    mac-node-10:
+      imageName: 'macos-latest'
+      nodeVersion: '10.x'
+    mac-node-latest:
+      imageName: 'macos-latest'
+      nodeVersion: '>=12.x'
+    windows-node-10:
+      imageName: 'windows-latest'
+      nodeVersion: '10.x'
+    windows-node-latest:
+      imageName: 'windows-latest'
+      nodeVersion: '>=12.x'
+
 trigger:
   batch: false
   branches:
@@ -15,12 +36,12 @@ trigger:
     - README.md
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: $(imageName)
 
 steps:
 - task: NodeTool@0
   inputs:
-    versionSpec: '10.x'
+    versionSpec: $(nodeVersion)
   displayName: 'Install Node.js'
 
 - script: |
