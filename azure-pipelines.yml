@@ -14,10 +14,35 @@ trigger:
     exclude:
     - README.md
 
-
 jobs:
+# https://docs.microsoft.com/en-us/azure/devops/pipelines/caching/index?view=azure-devops
+- job: warm_cache
+  displayName: 'Warm Cache'
+  continueOnError: false
+  pool:
+    vmImage: 'ubuntu-latest'
+  variables:
+    npm_config_cache: $(Pipeline.Workspace)/.npm
+    
+  steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '10.x'
+    displayName: 'Install Node.js'
+
+  - task: CacheBeta@0
+    inputs:
+      key: npm | $(Agent.OS) | package-lock.json
+      path: $(npm_config_cache)
+    displayName: 'Cache npm modules'
+
+  - script: npm ci
+
+
 - job: unit_tests
   displayName: 'Unit Tests'
+  dependsOn: warm_cache
+  condition: succeeded()
   continueOnError: false
 
   strategy:
@@ -51,9 +76,10 @@ jobs:
     displayName: 'Install Node.js'
 
   - script: |
-      npm install
+      npm ci
       npm test
     displayName: 'npm install and test'
+
 
 - job: build
   displayName: 'Build'
@@ -69,11 +95,12 @@ jobs:
     inputs:
       versionSpec: '10.x'
     displayName: 'Install Node.js'
-
+ 
   - script: |
-      npm install
+      npm ci
       npm run compile
     displayName: 'npm install and compile'
+
 
 - job: integration_tests
   displayName: 'Integration Tests'
@@ -91,10 +118,21 @@ jobs:
     displayName: 'Install Node.js'
 
   - script: |
-      npm install
+      npm ci
       npm run test-integrations
     env:
       AUTH_M2M_CLIENT_SECRET_AUTH0: $(AUTH_M2M_CLIENT_SECRET_AUTH0)
       AUTH_FUNCTIONS_KEY: $(AUTH_FUNCTIONS_KEY)
     displayName: 'npm run test-integrations'
 
+
+
+
+
+
+# Pipeline.Workspace variable. Under this, various sub-directories are created:
+
+# Build.SourcesDirectory is where tasks download the application's source code.
+# Build.ArtifactStagingDirectory is where tasks download artifacts needed for the pipeline or upload artifacts before they are published.
+# Build.BinariesDirectory is where tasks write their outputs.
+# Build.TestResultsDirectory is where tasks upload their test results.
