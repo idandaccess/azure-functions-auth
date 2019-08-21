@@ -8,9 +8,10 @@ IFS=$'\n\t'
 
 usage() { echo "Usage: $0 -i <subscriptionId> -g <resourceGroupName> -l <resourceGroupLocation>" 1>&2; exit 1; }
 
-declare subscriptionId=""
-declare resourceGroupName=""
-declare resourceGroupLocation=""
+# Check if parameters are defined as env vars
+declare subscriptionId="${AZURE_SUBSCRIPTION_ID:-}"
+declare resourceGroupName="${AZURE_RESOURCEGROUP_NAME:-}"
+declare resourceGroupLocation="${AZURE_RESOURCEGROUP_LOCATION:-}"
 
 # Initialize parameters specified from command line
 while getopts ":i:g:n:l:" arg; do
@@ -68,16 +69,55 @@ fi
 #set the default subscription id
 az account set --subscription $subscriptionId
 
-#deploy
-echo "Starting Function App deployment with core tools ..."
-(
-  #echo "Ignored files:"
-  #node_modules/.bin/func azure functionapp publish $resourceGroupName --list-ignored-files
-  
-  node_modules/.bin/func azure functionapp publish $resourceGroupName
+# Install prod deps
+echo "Installing exact production dependencies (so no dev dependencies) ..."
+( 
+  npm ci --only=prod
 )
 
+# Deploy
+echo "Starting Function App deployment with core tools ..."
+
+set +e
+
+# Try to deploy to Function App
+#   1> /dev/null is to prevent the function key being logged
+npx azure-functions-core-tools azure functionapp publish $resourceGroupName --resource-group $resourceGroupName 1> /dev/null
+
+if [ $? != 0 ]; then
+	echo "New resource group not yet available. Waiting and retrying.."
+	set -e
+  sleep 60
+	(
+		set -x
+    #   1> /dev/null is to prevent the function key being logged
+		npx azure-functions-core-tools azure functionapp publish $resourceGroupName --resource-group $resourceGroupName 1> /dev/null
+	)
+	else
+	echo "Resource group seems to have already existed"
+fi
+
+
+
+# (
+#   #echo "Ignored files:"
+#   #node_modules/.bin/func azure functionapp publish $resourceGroupName --list-ignored-files
+  
+#   set +e
+#   if [ (npx azure-functions-core-tools azure functionapp publish $resourceGroupName --resource-group $resourceGroupName) ];
+#   then
+#     set -e
+#     echo "Resource group seems to have already existed"
+#     sleep 1m
+#     set -e
+#   else
+#     echo "New resource group not yet available. Waiting and retrying.."
+    
+#     npx azure-functions-core-tools azure functionapp publish $resourceGroupName --resource-group $resourceGroupName
+#   fi
+# )
+
 if [ $?  == 0 ];
- then
+then
 	echo "Function App has been successfully deployed"
 fi

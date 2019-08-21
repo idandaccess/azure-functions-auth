@@ -6,15 +6,18 @@ IFS=$'\n\t'
 # -o: prevents errors in a pipeline from being masked
 # IFS new value is less likely to cause confusing bugs when looping arrays or arguments (e.g. $@)
 
-usage() { echo "Usage: $0 -i <subscriptionId> -g <resourceGroupName> -n <deploymentName (default: timestamp)> -l <resourceGroupLocation>" 1>&2; exit 1; }
+usage() { echo "Usage: $0 -i <subscriptionId> -g <resourceGroupName> -n <deploymentName (default: timestamp)> -l <resourceGroupLocation> -s <storageName>" 1>&2; exit 1; }
 
-declare subscriptionId=""
-declare resourceGroupName=""
+# Check if parameters are defined as env vars
+declare subscriptionId="${AZURE_SUBSCRIPTION_ID:-}"
+declare resourceGroupName="${AZURE_RESOURCEGROUP_NAME:-}"
+declare resourceGroupLocation="${AZURE_RESOURCEGROUP_LOCATION:-}"
+declare storageName="${AZURE_STORAGE_NAME:-}"
+
 declare deploymentName=""
-declare resourceGroupLocation=""
 
 # Initialize parameters specified from command line
-while getopts ":i:g:n:l:" arg; do
+while getopts ":i:g:l:s:" arg; do
 	case "${arg}" in
 		i)
 			subscriptionId=${OPTARG}
@@ -24,6 +27,9 @@ while getopts ":i:g:n:l:" arg; do
 			;;
 		l)
 			resourceGroupLocation=${OPTARG}
+			;;
+		s)
+			storageName=${OPTARG}
 			;;
 		esac
 done
@@ -58,24 +64,36 @@ if [[ -z "$resourceGroupLocation" ]]; then
 	read resourceGroupLocation
 fi
 
-#templateFile Path - template file to be used
-templateFilePath="template.json"
+if [[ -z "$storageName" ]]; then
+	echo "When creating a *new* Azure Function App, you need to specify a storage account name "
+	
+	echo "Enter storage name:"
+	read storageName
+fi
+
+# ARM template File Path - template file to be used
+templateFilePath=$(dirname "$0")"/template.json"
 
 if [ ! -f "$templateFilePath" ]; then
 	echo "$templateFilePath not found"
 	exit 1
 fi
 
-#parameter file path
-parametersFilePath="parameters.json"
+# ARM template parameters
+# armParameters=\
+# "{"\
+# "\"name\": {\"value\": \"${resourceGroupName}\"},"\
+# "\"storageName\": {\"value\": \"${storageName}\"}"\ 
+# "}"
 
-if [ ! -f "$parametersFilePath" ]; then
-	echo "$parametersFilePath not found"
-	exit 1
-fi
+armParameters=\
+"{"\
+"\"name\": {\"value\": \"${resourceGroupName}\"},"\
+"\"storageName\": {\"value\": \"${storageName}\"}"\
+"}"
 
-if [ -z "$subscriptionId" ] || [ -z "$resourceGroupName" ] || [ -z "$deploymentName" ]; then
-	echo "Either one of subscriptionId, resourceGroupName, deploymentName is empty"
+if [ -z "$subscriptionId" ] || [ -z "$resourceGroupName" ] || [ -z "$resourceGroupLocation" ] || [ -z "$storageName" ]; then
+	echo "Either one of subscriptionId, resourceGroupName, resourceGroupLocation, storageName is empty"
 	usage
 fi
 
@@ -110,7 +128,11 @@ fi
 echo "Starting deployment..."
 (
 	set -x
-	az group deployment create --name "$deploymentName" --resource-group "$resourceGroupName" --template-file "$templateFilePath" --parameters "@${parametersFilePath}"
+	az group deployment create \
+  --name "$deploymentName" \
+  --resource-group "$resourceGroupName" \
+  --template-file "$templateFilePath" \
+  --parameters "${armParameters}"
 )
 
 if [ $?  == 0 ];
