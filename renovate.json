@@ -6,8 +6,7 @@
   "packageRules": [
     {
       "depTypeList": ["devDependencies"],
-      "automerge": true,
-      "automergeType": "branch"
+      "automerge": true
     }
   ]
 }
