@@ -29,7 +29,7 @@
     "release": "git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish",
     "test-watch": "NODE_ENV=test mocha --compilers js:babel-core/register --timeout 5000 $(find ./tests -name *.tests.js) --watch",
     "test": "jest ./src/",
-    "test-integrations": "jest ./test/integrations"
+    "test-integrations": "cd ./test/function-app/ && npx azure-functions-core-tools start & npx wait-on tcp:7071 && npx jest ./test/integrations"
   },
   "repository": {
     "type": "git",
