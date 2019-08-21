@@ -1,7 +1,9 @@
+require("dotenv").config({ path: "./../../.env" });
+const env = process.env;
 const options = {
-  algorithms: [ 'RS256' ],
-  domain: 'https://idandaccess.eu.auth0.com/',
-  audience: 'api://tests.repo.azure-functions-auth.idandaccess.com',
+  algorithms: ["RS256"],
+  domain: "https://idandaccess.eu.auth0.com/",
+  audience: "api://tests.repo.azure-functions-auth.idandaccess.com",
   publicKey: `-----BEGIN CERTIFICATE-----
 MIIDCzCCAfOgAwIBAgIJBraIuU0JYA+9MA0GCSqGSIb3DQEBCwUAMCMxITAfBgNV
 BAMTGGlkYW5kYWNjZXNzLmV1LmF1dGgwLmNvbTAeFw0xOTA3MzExOTE5MzZaFw0z
@@ -22,26 +24,26 @@ jmJvkxBaRdQNUltryfgW1cWqlcFSO895s5rP4QNyVMEBGn3x5jTO4TufcgG0hYNR
 nwMPN8hFOPwOF8zQp2YA
 -----END CERTIFICATE-----`
 };
+const libLocation = env.LIB_FILEPATH || "./../../../lib/index";
 
-// test against a copy of 'src/index.js'
-// first copy current verison of 'src/index.js' to './validate-jwt.js'
-const createValidateJwt = require('./validate-jwt.js');
-const validateJwt = createValidateJwt(options); 
+// if on CICD, use artifact dir instead
+const createValidateJwt = require(libLocation);
+const validateJwt = createValidateJwt(options);
 
 // to test against the deployed package
-//const validateJwt = require('azure-functions-auth')(options); 
+//const validateJwt = require('azure-functions-auth')(options);
 
-const main = async function (context, req) {
+const main = async function(context, req) {
   context.log('Function "test-jwt-validation" processed a request.');
 
   if (req.user) {
     context.res = {
-      body: 'Authentication successful 🎉'
+      body: "Authentication successful 🎉"
     };
   } else {
     context.res = {
       status: 400,
-      body: 'Authentication failed 👎'
+      body: "Authentication failed 👎"
     };
   }
   context.done();

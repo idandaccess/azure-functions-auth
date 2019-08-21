@@ -24,6 +24,7 @@
     "azure-functions-core-tools": "^2.7.1480"
   },
   "dependencies": {
+    "dotenv": "^8.1.0",
     "express-jwt": "^5.3.1"
   }
 }
