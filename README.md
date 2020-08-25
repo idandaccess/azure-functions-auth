@@ -79,6 +79,7 @@ GET https://functionsad5bb49d.azurewebsites.net/api/my-http-function?...
 Authorization: Bearer the-access-token
 ```
 
+
 ## Attribution
 
 This code is based on [https://github.com/sandrinodimattia/azure-functions-auth0](https://github.com/sandrinodimattia/azure-functions-auth0)
