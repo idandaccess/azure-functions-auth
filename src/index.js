@@ -23,7 +23,8 @@ const validateJwt = expressValidateJwt => (next, returnPromise) => {
     function handleResult (resolve) {
       return (err) => {
         if (err) {
-          return resolve( getJwtValidationError( err ))
+          context.res = getJwtValidationError( err )
+          return resolve( context.done())
         }
         resolve( next(context, req, ...rest))
       };
