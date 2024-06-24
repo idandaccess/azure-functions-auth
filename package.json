@@ -4,7 +4,7 @@
   "description": "Authentication and Authorization for Azure Functions (with OAuth 2.0 and JWT)",
   "main": "lib/index.js",
   "dependencies": {
-    "express-jwt": "^6.0.0"
+    "express-jwt": "^7.0.0"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
