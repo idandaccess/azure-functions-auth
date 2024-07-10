@@ -20,7 +20,7 @@
     "istanbul": "0.4.5",
     "jest": "24.9.0",
     "request-promise": "4.2.6",
-    "rimraf": "3.0.2"
+    "rimraf": "6.0.1"
   },
   "scripts": {
     "clean": "rimraf lib/",
